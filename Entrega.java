@@ -92,7 +92,26 @@ class Entrega {
      * És cert que ∀x : P(x) -> ∃!y : Q(x,y) ?
      */
     static boolean exercici2(int[] universe, Predicate<Integer> p, BiPredicate<Integer, Integer> q) {
-      return false; // TODO
+      //Como es una implicacion nos tenemos que fijar solo un los elementos que:
+      //P(x) == True y comprobar que existe un unico y que cumple Q(x,y)
+      //Si P(x) es True y hay mas de un y o ninguno tiene que dar false
+      //Si P(x) es True y hay solo un y tal que Q(x,y), tiene que dar true
+      for (int x: universe){
+        //p.test(x) evalua la variable x con el predicado
+        if(p.test(x)) {
+          //Como solo queremos contador sea 1 despues de haber recorrido todo el universo
+          int contador = 0;
+          for (int y : universe) {
+            if (q.test(x, y)) {
+              contador++;
+              if(contador > 1) return false;
+            }
+          }
+          if(contador == 0) return false;
+        }
+      }
+      return true; // TODO
+
     }
 
     /*
@@ -178,12 +197,13 @@ class Entrega {
       assertThat(exercici1(1) == 1);
       assertThat(exercici1(-7) == 0);
 
-      /************* FIN PRUEBAS EXTRA EJERCICIO 1 ****************
+      //************* FIN PRUEBAS EXTRA EJERCICIO 1 ****************
 
       // Exercici 2
       // ∀x : P(x) -> ∃!y : Q(x,y)
-/*      assertThat(
-          exercici2(
+
+      assertThat(
+            exercici2(
             new int[] { 1, 2, 3 },
             x -> x % 2 == 0,
             (x, y) -> x+y >= 5
@@ -196,7 +216,43 @@ class Entrega {
             x -> x < 3,
             (x, y) -> x-y > 0
           )
-      );*/
+      );
+
+      /***************** PRUEBAS EXTRA EJERCICIO 2 ****************
+       *                                                          *
+       ************************************************************/
+      /*
+      Solo 5 cumple p(x); y solamente 5+5 cumple Q(x,y), por lo tante es true
+       */
+      assertThat(
+              exercici2(
+                      new int[] { 1, 2, 3, 4, 5 },
+                      x -> x % 5 == 0,
+                      (x, y) -> x+y == 10
+              )
+      );
+      /*
+      Solo 5 cumple p(x); 5+1 < 10, 5+2 < 10. ya hay dos elementos que lo cumplen Q(x,y) por lo tanto
+      no hace falta mirar más es false
+       */
+      assertThat(
+              !exercici2(
+                      new int[] { 1, 2, 3, 4, 5 },
+                      x -> x % 5 == 0,
+                      (x, y) -> x+y < 10
+              )
+      );
+      //Como ninguna de los elementos del universo cumple P(x) va igual lo que sea Q(X)
+      //Siempre será True para ese universo
+      assertThat(
+              exercici2(
+                      new int[] {1, 2, 3, 4, 5},
+                      x -> x > 6,
+                      (x, y) -> x+y < 10
+              )
+      );
+
+      //************* FIN PRUEBAS EXTRA EJERCICIO 2 ****************
 
       // Exercici 3
       // És cert que ∃x : ∀y : Q(x, y) -> P(x) ?
