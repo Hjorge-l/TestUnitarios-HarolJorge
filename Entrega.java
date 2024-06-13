@@ -119,29 +119,29 @@ class Entrega {
      */
     static boolean exercici3(int[] universe, Predicate<Integer> p, BiPredicate<Integer, Integer> q) {
       // he usado el contra reciproco y modificado minimamente el exercici2
-      //Q(x, y) -> P(x) <-> !P(x) -> !Q(x,y)
-      //Solo nos importa cuando P(x) sea falso.
-      //en ese caso mirariamos Q(x,y) sea falso, si es falso devolvera true.
-      //en el caso de que Q(x,y) sea verdadera devolvera false
+      //∃x : ∀y :Q(x, y) -> P(x) <-> ∀x: Ey :!P(x) -> !Q(x,y)
+      //Al aplicar el contra reciproco los cuantificadores tambien se giran
+      //Tenemos que comprobar que para todo P(x) = true.
+      //Exista un y tal que Q(x,y) = true; en caso contrario da false
       Boolean resultado = true;
       for (int x: universe){
         //p.test(x) evalua la variable x con el predicado
-        int result = x % 3;
         if(!p.test(x)) {
-          //Como solo queremos contador sea 1 despues de haber recorrido todo el universo
           boolean existe = false;
           for (int y : universe) {
-            // si entra en el if significa que no se cumple para uno por lo tanto
+            //tiene que entrar dentro del if para que se cumpla Q(x,y)
             if (!q.test(x, y)) {
-              //como existe uno, nos da igual si existen más o no
+              //con que exista un ya nos sirve
               existe = true;
               break;
             }
           }
+          //con este if comprobamos el para todo x
           if(existe){
             resultado = true;
           }else {
             resultado = false;
+            break;
           }
         }
       }
