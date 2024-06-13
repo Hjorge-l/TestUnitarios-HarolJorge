@@ -118,7 +118,34 @@ class Entrega {
      * És cert que ∃x : ∀y : Q(x, y) -> P(x) ?
      */
     static boolean exercici3(int[] universe, Predicate<Integer> p, BiPredicate<Integer, Integer> q) {
-      return false; // TODO
+      // he usado el contra reciproco y modificado minimamente el exercici2
+      //Q(x, y) -> P(x) <-> !P(x) -> !Q(x,y)
+      //Solo nos importa cuando P(x) sea falso.
+      //en ese caso mirariamos Q(x,y) sea falso, si es falso devolvera true.
+      //en el caso de que Q(x,y) sea verdadera devolvera false
+      Boolean resultado = true;
+      for (int x: universe){
+        //p.test(x) evalua la variable x con el predicado
+        int result = x % 3;
+        if(!p.test(x)) {
+          //Como solo queremos contador sea 1 despues de haber recorrido todo el universo
+          boolean existe = false;
+          for (int y : universe) {
+            // si entra en el if significa que no se cumple para uno por lo tanto
+            if (!q.test(x, y)) {
+              //como existe uno, nos da igual si existen más o no
+              existe = true;
+              break;
+            }
+          }
+          if(existe){
+            resultado = true;
+          }else {
+            resultado = false;
+          }
+        }
+      }
+      return resultado; // TODO
     }
 
     /*
@@ -256,7 +283,7 @@ class Entrega {
 
       // Exercici 3
       // És cert que ∃x : ∀y : Q(x, y) -> P(x) ?
-/*      assertThat(
+      assertThat(
           exercici3(
             new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 },
             x -> x % 3 != 0,
@@ -270,7 +297,55 @@ class Entrega {
             x -> x % 4 != 0,
             (x, y) -> (x*y) % 4 != 0
           )
-      );*/
+      );
+
+      /***************** PRUEBAS EXTRA EJERCICIO 3 ****************
+       *                                                          *
+       ************************************************************/
+      assertThat(
+              exercici3(
+                      new int[] { 1, 2, 3, 4 },
+                      x -> x % 2 == 0,
+                      (x, y) -> x + y > 4
+              )
+      );
+
+      assertThat(
+              exercici3(
+                      new int[] { 5, 10, 15, 20 },
+                      x -> x > 5,
+                      (x, y) -> x > y
+              )
+      );
+      //És cert que ∃x : ∀y : Q(x, y) -> P(x) ?
+
+      assertThat(
+              !exercici3(
+                      new int[] { 1, 2, 3, 4 },
+                      x -> x % 2 == 1,
+                      (x, y) -> (x + y) > 4
+              )
+      );
+
+      assertThat(
+              //siempre será true ya que Q(x,y) nunca se cumple por lo tanto
+              //por reglas de implicacion será true siempre
+              exercici3(
+                      new int[] { 1, 2, 3, 4 },
+                      x -> x > 4,
+                      (x, y) -> (x + y) > 10
+              )
+      );
+
+      assertThat(
+              //siempre sera falso ya que nunca se cumple P(x)
+              !exercici3(
+                      new int[] { 1, 2, 3, 4 },
+                      x -> x < 1,
+                      (x, y) -> (x + y) <= 10
+              )
+      );
+      //************* FIN PRUEBAS EXTRA EJERCICIO 3 ****************
 
       // Exercici 4
       // És cert que ∃x : ∃!y : ∀z : P(x,z) <-> Q(y,z) ?
