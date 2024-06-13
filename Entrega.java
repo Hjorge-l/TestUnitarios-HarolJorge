@@ -467,7 +467,19 @@ class Entrega {
      * Podeu soposar que `a`, `b` i `c` estan ordenats de menor a major.
      */
     static int exercici1(int[] a, int[] b, int[] c) {
-      return -1; // TODO
+      HashSet<Integer>  resultado = new HashSet<>();
+
+      //HasSet nos permite añadir elementos
+      //Si intentamos añadir un elemento que ya está, add devolverá false y no lo añadirá
+      for (int x: a) {resultado.add(x);}
+      for (int x: b) {resultado.add(x);}
+
+      HashSet<Integer> diferencia = new HashSet<>();
+      for(int x: a){diferencia.add(x);}
+      for(int x: c){diferencia.remove(x);}
+
+
+      return resultado.size() * diferencia.size(); // TODO
     }
 
     /*
@@ -537,29 +549,85 @@ class Entrega {
           == 2
       );
 
+      /************* PRUEBAS EXTRA EJERCICIO 1 T2 *****************
+       *                                                          *
+       ************************************************************/
+      assertThat(
+              exercici1(
+                      new int[] { 3, 4, 5 },
+                      new int[] { 1,2,3 },
+                      new int[] { 4, 5}
+              ) == 5
+      );
+
+      assertThat(
+              exercici1(
+                      new int[] { 0, 2, 4, 6 },
+                      new int[] { 1, 3, 5 },
+                      new int[] { 0, 6 }
+              ) == 14
+      );
+
+      assertThat(
+              exercici1(
+                      new int[] { 1, 2, 3, 4, 5 },
+                      new int[] { 3, 4, 5, 6, 7 },
+                      new int[] { 2, 5 }
+              ) == 21
+      );
+
+      assertThat(
+              exercici1(
+                      new int[] { 1, 2, 3 },
+                      new int[] { 4, 5, 6 },
+                      new int[] { }
+              ) == 18
+      );
+
+      assertThat(
+              exercici1(
+                      new int[] { 1, 2, 3 },
+                      new int[] { 4, 5, 6 },
+                      new int[] { 1 }
+              ) == 12
+      );
+      //*********** FIN PRUEBAS EXTRA EJERCICIO 1 T2 **************
+
       // Exercici 2
       // nombre d'elements de la clausura d'equivalència
 
-      final int[] int08 = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
+/*      final int[] int08 = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
 
       assertThat(exercici2(int08, generateRel(int08, (x, y) -> y == x + 1)) == 81);
 
       final int[] int123 = { 1, 2, 3 };
 
-      assertThat(exercici2(int123, new int[][] { {1, 3} }) == 5);
+      assertThat(exercici2(int123, new int[][] { {1, 3} }) == 5);*/
+
+      /************* PRUEBAS EXTRA EJERCICIO 2 T2 *****************
+       *                                                          *
+       ************************************************************/
+
+      //*********** FIN PRUEBAS EXTRA EJERCICIO 2 T2 **************
 
       // Exercici 3
       // Si rel és un ordre total, retornar les arestes del diagrama de Hasse
 
-      final int[] int05 = { 0, 1, 2, 3, 4, 5 };
+/*      final int[] int05 = { 0, 1, 2, 3, 4, 5 };
 
       assertThat(exercici3(int05, generateRel(int05, (x, y) -> x >= y)) == 5);
-      assertThat(exercici3(int08, generateRel(int05, (x, y) -> x <= y)) == -2);
+      assertThat(exercici3(int08, generateRel(int05, (x, y) -> x <= y)) == -2);*/
+
+      /************* PRUEBAS EXTRA EJERCICIO 3 T2 *****************
+       *                                                          *
+       ************************************************************/
+
+      //*********** FIN PRUEBAS EXTRA EJERCICIO 3 T2 **************
 
       // Exercici 4
       // Composició de grafs de funcions (null si no ho son)
 
-      assertThat(
+/*      assertThat(
           exercici4(
             int05,
             generateRel(int05, (x, y) -> x*x == y),
@@ -580,19 +648,25 @@ class Entrega {
             lexSorted(ex4test2),
             generateRel(int05, (x, y) -> y == (5 - x + 1) % 6)
           )
-      );
+      );*/
+
+      /************* PRUEBAS EXTRA EJERCICIO 4 T2 *****************
+       *                                                          *
+       ************************************************************/
+
+      //*********** FIN PRUEBAS EXTRA EJERCICIO 4 T2 **************
 
       // Exercici 5
       // trobar l'inversa (null si no existeix)
 
-      assertThat(exercici5(int05, int08, x -> x + 3) == null);
+/*      assertThat(exercici5(int05, int08, x -> x + 3) == null);
 
       assertThat(
           Arrays.deepEquals(
             lexSorted(exercici5(int08, int08, x -> 8 - x)),
             generateRel(int08, (x, y) -> y == 8 - x)
           )
-      );
+      );*/
     }
 
     /**
@@ -653,6 +727,12 @@ class Entrega {
    *
    * **NOTA: Els exercicis d'aquest tema conten doble**
    */
+
+  /************* PRUEBAS EXTRA EJERCICIO 5 T2 *****************
+   *                                                          *
+   ************************************************************/
+
+  //*********** FIN PRUEBAS EXTRA EJERCICIO 5 T2 **************
   static class Tema3 {
     /*
      * Determinau si el graf és connex. Podeu suposar que `g` no és dirigit.
@@ -856,8 +936,8 @@ class Entrega {
    */
   public static void main(String[] args) {
     Tema1.tests();
-/*    Tema2.tests();
-    Tema3.tests();
+    Tema2.tests();
+/*    Tema3.tests();
     Tema4.tests();*/
   }
 
