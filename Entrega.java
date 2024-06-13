@@ -152,6 +152,37 @@ class Entrega {
      * És cert que ∃x : ∃!y : ∀z : P(x,z) <-> Q(y,z) ?
      */
     static boolean exercici4(int[] universe, BiPredicate<Integer, Integer> p, BiPredicate<Integer, Integer> q) {
+      //Doble implicacion solo es verdad cuando
+      // (P(x,z) = 0  Q(y,z) = 0) = True
+      // (P(x,z) = 1  Q(y,z) = 1) = True
+      // por lo tanto en el momento en el que alguna sea diferente de la otra la doble implicacion = false;
+      for(int x: universe){
+        int contadorUnicoY = 0;
+        for(int y: universe){
+          //suponemos que hay solo un Y
+          boolean paraTodoZ = true;
+          for (int z: universe){
+            //if que comprueba que para todo z se cumpla las condiciones
+            //P(x,z) sea diferente de Q(y,z) ya no cumple la doble implicacion
+            if(p.test(x,z) != q.test(y,z)){
+              paraTodoZ = false;
+              break;
+            }
+          }
+          // cuando paraTodoZ = True
+          // creamos un contadorUnicoY que nos ira contando las veces que se cumple el parTodoZ
+          if(paraTodoZ){
+            contadorUnicoY ++;
+            //En caso de que haya mas de 1 no se cumplira Existe un unico y se saldrá del bucle
+            if(contadorUnicoY > 1)
+              break;
+          }
+        }
+        //Despues de comprobar que solo hay uno devolvemos true;
+        if(contadorUnicoY == 1 ){
+          return true;
+        }
+      }
       return false; // TODO
     }
 
@@ -349,7 +380,7 @@ class Entrega {
 
       // Exercici 4
       // És cert que ∃x : ∃!y : ∀z : P(x,z) <-> Q(y,z) ?
-/*      assertThat(
+      assertThat(
           exercici4(
             new int[] { 0, 1, 2, 3, 4, 5 },
             (x, z) -> x*z == 1,
@@ -363,7 +394,50 @@ class Entrega {
             (x, z) -> x*z == 1,
             (y, z) -> y*z == 2
           )
-      );*/
+      );
+      /***************** PRUEBAS EXTRA EJERCICIO 4 ****************
+       *                                                          *
+       ************************************************************/
+      //Caso de prueba basico
+      assertThat(
+              exercici4(
+                      new int[] { 1, 2, 3 },
+                      (x, z) -> x == z,
+                      (y, z) -> y == z
+              )
+      );
+      //Caso de prueba único Y
+      assertThat(
+              exercici4(
+                      new int[] { 1, 2, 3},
+                      (x, z) -> x % 2 == z % 2,
+                      (y, z) -> y == z
+      ));
+      //Caso sin un unico Y
+      assertThat(
+              !exercici4(
+                      new int[] { 1, 2, 3, 4},
+                      (x, z) -> x % 2 == z % 2,
+                      (y, z) -> y == z
+      ));
+      // X sin un Y unico
+      assertThat(
+              exercici4(
+                      new int[] { 1, 2, 3 },
+                      (x, z) -> x <= z,
+                      (y, z) -> y <= z
+              )
+      );
+
+      //todos los z tiene un unico
+      assertThat(
+              exercici4(
+                      new int[] { 1, 2, 3, 4 },
+                      (x, z) -> x > z,
+                      (y, z) -> y > z
+              )
+      );
+      //************* FIN PRUEBAS EXTRA EJERCICIO 4 ****************
     }
   }
 
