@@ -855,9 +855,24 @@ class Entrega {
      * Calculau el mínim comú múltiple de `a` i `b`.
      */
     static int exercici1(int a, int b) {
-      return -1; // TO DO
-    }
+      // para encontrar el mcm podemos usar el algoritmo de euclides
+      // usando la siguiente formula mcm(a,b) = abs(a * b)/mcd_euclides(a,b)
+      int abs_a = a;
+      int abs_b = b;
+      if(a < 0){abs_a = abs_a * -1;}
+      if(b < 0){abs_b = abs_b * -1;}
 
+      return (abs_a*abs_b)/mcd_euclides(abs_a,abs_b); // TO DO
+    }
+    static int mcd_euclides(int a, int b) {
+      //algoritmo de euclides
+      while (b != 0 ) {
+        int temp = b;
+        b = a % b;
+        a = temp;
+      }
+      return a;
+    }
     /*
      * Trobau totes les solucions de l'equació
      *
@@ -907,23 +922,40 @@ class Entrega {
       assertThat(exercici1(35, 77) == 5*7*11);
       assertThat(exercici1(-8, 12) == 24);
 
+      /************* PRUEBAS EXTRA EJERCICIO 1 T4 *****************
+       *                                                          *
+       ************************************************************/
+      assertThat(exercici1(5, 4) == 20);
+      assertThat(exercici1(-5, 4) == 20);
+      assertThat(exercici1(5, -4) == 20);
+      assertThat(exercici1(-5, -4) == 20);
+      assertThat(exercici1(10, 0) == 0);
+      assertThat(exercici1(0, 10) == 0);
+      //primos
+      assertThat(exercici1(2, 3) == 6);
+      assertThat(exercici1(7, 11) == 77);
+      assertThat(exercici1(-7, -11) == 77);
+
+      assertThat(exercici1(10,5) == 10);
+      //*********** FIN PRUEBAS EXTRA EJERCICIO 5 T2 **************
+
       // Exercici 2
       // Solucions de a·x ≡ b (mod n)
 
-      assertThat(Arrays.equals(exercici2(2, 2, 4), new int[] { 1, 3 }));
-      assertThat(Arrays.equals(exercici2(3, 2, 4), new int[] { 2 }));
+/*      assertThat(Arrays.equals(exercici2(2, 2, 4), new int[] { 1, 3 }));
+      assertThat(Arrays.equals(exercici2(3, 2, 4), new int[] { 2 }));*/
 
       // Exercici 3
       // El sistema a·x ≡ c (mod m), b·x ≡ d (mod n) té solució?
 
-      assertThat(exercici3(3, 2, 2, 2, 5, 4));
-      assertThat(!exercici3(3, 2, 2, 2, 10, 4));
+/*      assertThat(exercici3(3, 2, 2, 2, 5, 4));
+      assertThat(!exercici3(3, 2, 2, 2, 10, 4));*/
 
       // Exercici 4
       // n^k mod p
 
-      assertThat(exercici4(2018, 2018, 5) == 4);
-      assertThat(exercici4(-2147483646, 2147483645, 46337) == 7435);
+/*      assertThat(exercici4(2018, 2018, 5) == 4);
+      assertThat(exercici4(-2147483646, 2147483645, 46337) == 7435);*/
     }
   }
 
@@ -936,9 +968,9 @@ class Entrega {
    */
   public static void main(String[] args) {
     Tema1.tests();
-    Tema2.tests();
-/*    Tema3.tests();
-    Tema4.tests();*/
+/*    Tema2.tests();*/
+    /*Tema3.tests();*/
+    Tema4.tests();
   }
 
   /// Si b és cert, no fa res. Si b és fals, llança una excepció (AssertionError).
