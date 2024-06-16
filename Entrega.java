@@ -796,7 +796,61 @@ class Entrega {
      * Retornau el nombre mínim de moviments, o -1 si no és possible arribar-hi.
      */
     static int exercici2(int w, int h, int i, int j) {
-      return -1; // TO DO
+      //Posibles movimientos del caballo
+      final int[][] MOVIMIENTOS_CABALLO = {
+              {-2, -1}, {-2, 1}, {-1, -2}, {-1, 2},
+              {1, -2}, {1, 2}, {2, -1}, {2, 1}
+      };
+
+      //Casos triviales
+
+      if(i==j){
+        return 0;
+      }
+      if(w <= 0 || h <= 0){
+        return -1;
+      }
+      //creamos un array bidimensional con h y w que está iniciado todo a false
+      boolean[][] casillas_visitadas = new boolean[h][w];
+      List<int[]> cola = new ArrayList<>();
+
+      //Como nos pasan por parametro una cardenada que esta en una dimension.
+      //Eso lo tenemos que transformar en dos dimensiones, la posicion inicial y la final.
+      int inicio_X = i / w;
+      int inicio_Y = i % w;
+
+      int final_X = j / w;
+      int final_Y = j % w;
+
+      // Posición inicial del caballo
+      // {x, y, distancia}
+      int[] posicion_inicial = {inicio_X, inicio_Y,0};
+      cola.add(posicion_inicial);
+      casillas_visitadas[inicio_X][inicio_Y] = true;
+
+      while (!cola.isEmpty()) {
+        int[] current = cola.remove(0);
+        int x = current[0];
+        int y = current[1];
+        int dist = current[2];
+
+        //Consultamos todos los posibles movimientos del caballo
+        for (int[] movimiento : MOVIMIENTOS_CABALLO) {
+          int nx = x + movimiento[0];
+          int ny = y + movimiento[1];
+
+          // Comprobar si la nueva posición está dentro del trablero
+          // y que no haya sido visitada
+          if (nx >= 0 && ny >= 0 && nx < h && ny < w && !casillas_visitadas[nx][ny]) {
+            if (nx == final_X && ny == final_Y) {
+              return dist + 1; // Encontró la posición objetivo
+            }
+            cola.add(new int[]{nx, ny, dist + 1});
+            casillas_visitadas[nx][ny] = true;
+          }
+        }
+      }
+      return -1;
     }
 
     /*
@@ -866,7 +920,7 @@ class Entrega {
       //S-Bipartito + nodo no conexo
       final int[][] bipartitoV3 = {{4,5,6,7},{4,5,6,7},{4,5,6,7},{},{0,1,2},{0,1,2},{0,1,2},{0,1,2}};
       assertThat(!exercici1(bipartitoV3));
-      //S-Bipartito + nodo conectado a un nodo arbitrario  
+      //S-Bipartito + nodo conectado a un nodo arbitrario
       final int[][] bipartitoV4 = {{4,5,6,7},{4,5,6,7,3},{4,5,6,7},{1},{0,1,2},{0,1,2},{0,1,2},{0,1,2}};
       assertThat(exercici1(bipartitoV4));
       //*********** FIN PRUEBAS EXTRA EJERCICIO 1 T3 **************
@@ -878,12 +932,38 @@ class Entrega {
       // 0  1   2   3
       // 4  5   6   7
       // 8  9  10  11
-     /* assertThat(exercici2(4, 3, 0, 11) == 3);*/
+      assertThat(exercici2(4, 3, 0, 11) == 3);
 
       // Tauler 3x2. Moviments de 0 a 2: (impossible).
       // 0 1 2
       // 3 4 5
-      /*assertThat(exercici2(3, 2, 0, 2) == -1);*/
+      assertThat(exercici2(3, 2, 0, 2) == -1);
+
+      /************* PRUEBAS EXTRA EJERCICIO 2 T3 *****************
+       *                                                          *
+       ************************************************************/
+      // Tauler 3x2. Moviments de 0 a 2: .
+      // 0 1 2 3
+      // 4 5 6 7
+      assertThat(exercici2(4, 2, 5, 3) == 1);
+      // Tauler 4x3. Moviments de 0 a 2: .
+      // 0 1 2  3
+      // 4 5 6  7
+      // 8 9 10 11
+      assertThat(exercici2(4, 3, 6, 3) == 4);
+      // Tauler 4x3. Moviments de 0 a 2: .
+      // 0 1 2  3
+      // 4 5 6  7
+      // 8 9 10 11
+      assertThat(exercici2(4, 3, 4, 3) == 2);
+
+      //Casos de fallo
+      // Tauler 2x2. Moviments de 0 a 2: (impossible).
+      // 0 1
+      // 2 3
+      assertThat(exercici2(2, 2, 0, 2) == -1);
+
+      //*********** FIN PRUEBAS EXTRA EJERCICIO 2 T3 **************
 
       // Exercici 3
       // u apareix abans que v al recorregut en preordre (o u=v)
