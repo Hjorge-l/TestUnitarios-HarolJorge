@@ -1045,8 +1045,18 @@ class Entrega {
       /************* PRUEBAS EXTRA EJERCICIO 4 T4 *****************
        *                                                          *
        ************************************************************/
+      //basicos
+      assertThat(exercici4(2, 3, 5) == 3);
+      assertThat(exercici4(5, 2, 5) == 0);
+      assertThat(exercici4(2,2,7) == 4);
+
+      //Exponentes altos
       assertThat(exercici4(274, 2780, 11) == 1);
       assertThat(exercici4(3752, 9784, 11) == 1);
+      assertThat(exercici4(3,158,11) == 5);
+      assertThat(exercici4(2023,2023,5) == 2);
+      assertThat(exercici4(-2024,2023,7) == 6);
+
       //*********** FIN PRUEBAS EXTRA EJERCICIO 2 T4 **************
     }
   }
