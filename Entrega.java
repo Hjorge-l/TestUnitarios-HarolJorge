@@ -883,9 +883,53 @@ class Entrega {
      * Podeu suposar que `n > 1`. Recordau que no no podeu utilitzar la força bruta.
      */
     static int[] exercici2(int a, int b, int n) {
-      return new int[] {}; // TO DO
+      //Usamos el algorimo de Euclides para calcular el mcd
+      int mcd = mcd_euclides(a, n);
+      if (b % mcd != 0) {
+        //comprobamos si el mcd divide a b
+        //si el mcd no divide a b no tiene solucion
+        return new int[]{};//devolvemos una lista vacia
+      }
+      //Reducimos los coeficientes
+      int a_reducido = a / mcd;
+      int b_reducido = b / mcd;
+      int n_reducido = n / mcd;
+
+      int[] euclides_resultado = algoritmo_Euclides_extendido(a_reducido,n_reducido);
+
+      int x0 = euclides_resultado [1] * (b_reducido / euclides_resultado [0]) % n_reducido;
+
+      // Ajustar el rango de x0
+      if (x0 < 0) {
+        x0 += n_reducido;
+      }
+
+      List<Integer> soluciones = new ArrayList<>();
+      for (int k = 0; k < mcd; k++) {
+        soluciones.add((x0 + k * n_reducido) % n);
+      }
+
+      int[] lista_soluciones = new int[soluciones.size()];
+
+      for (int i = 0; i < soluciones.size(); i++) {
+        lista_soluciones[i] = soluciones.get(i);
+      }
+
+      return lista_soluciones;
     }
 
+    static int[] algoritmo_Euclides_extendido(int a, int b){
+      //Este metodo nos devuelve una solucion en particular a*x +b*y
+      if (b == 0) {
+        return new int[] { a, 1, 0 };
+      }
+      int resto = a % b;
+      int[] result = algoritmo_Euclides_extendido(b, resto);
+      int mcd = result[0];
+      int x = result[2];
+      int y = result[1] - (a / b) * result[2];
+      return new int[] { mcd, x, y };
+    }
     /*
      * Donats `a != 0`, `b != 0`, `c`, `d`, `m > 1`, `n > 1`, determinau si el sistema
      *
@@ -937,13 +981,22 @@ class Entrega {
       assertThat(exercici1(-7, -11) == 77);
 
       assertThat(exercici1(10,5) == 10);
-      //*********** FIN PRUEBAS EXTRA EJERCICIO 5 T2 **************
+      //*********** FIN PRUEBAS EXTRA EJERCICIO 1 T4 **************
 
       // Exercici 2
       // Solucions de a·x ≡ b (mod n)
 
-/*      assertThat(Arrays.equals(exercici2(2, 2, 4), new int[] { 1, 3 }));
-      assertThat(Arrays.equals(exercici2(3, 2, 4), new int[] { 2 }));*/
+      assertThat(Arrays.equals(exercici2(2, 2, 4), new int[] { 1, 3 }));
+      assertThat(Arrays.equals(exercici2(3, 2, 4), new int[] { 2 }));
+
+      /************* PRUEBAS EXTRA EJERCICIO 2 T4 *****************
+       *                                                          *
+       ************************************************************/
+      assertThat(Arrays.equals(exercici2(14, 30, 100), new int[] { 45, 95 }));
+      assertThat(Arrays.equals(exercici2(21, 14, 77), new int[]{8, 19, 30, 41, 52, 63, 74}));
+      assertThat(Arrays.equals(exercici2(9, 18, 27), new int[]{2, 5, 8, 11, 14, 17, 20, 23, 26}));
+      assertThat(Arrays.equals(exercici2(10, 25, 35), new int[]{6, 13, 20, 27, 34}));
+      //*********** FIN PRUEBAS EXTRA EJERCICIO 2 T4 **************
 
       // Exercici 3
       // El sistema a·x ≡ c (mod m), b·x ≡ d (mod n) té solució?
