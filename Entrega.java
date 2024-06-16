@@ -864,6 +864,10 @@ class Entrega {
 
       return (abs_a*abs_b)/mcd_euclides(abs_a,abs_b); // TO DO
     }
+
+    /*  Función EXTRA: implementa el algoritmo de Euclides
+                       para encontrar el mcd y lo devuelve
+                   */
     static int mcd_euclides(int a, int b) {
       //algoritmo de euclides
       while (b != 0 ) {
@@ -918,6 +922,12 @@ class Entrega {
       return lista_soluciones;
     }
 
+    /*  Función EXTRA: implementa el algoritmo extendido de Euclides
+                       para encontrar el mcd de 'a' y 'b' y los coeficientes de Bézout 'x' e 'y'
+                       tal que a*x + b*y = mcd(a,b)
+
+                       devuelve un array con tres elementos [mcd,x,y]
+                       */
     static int[] algoritmo_Euclides_extendido(int a, int b){
       //Este metodo nos devuelve una solucion en particular a*x +b*y
       if (b == 0) {
@@ -939,7 +949,31 @@ class Entrega {
      * té solució.
      */
     static boolean exercici3(int a, int b, int c, int d, int m, int n) {
-      return false; // TO DO
+      int mcd = mcd_euclides(m, n);
+
+      if ((c - d) % mcd != 0) {
+        return false; // No hay solución si el mcd no divide la diferencia de c y d
+      }
+
+      // Podemos aplicar el Teorema Chino del Resto si m y n son coprimos
+      if (mcd == 1) {
+        return true;
+      }
+
+      // Verificar si las ecuaciones son compatibles cuando gcd(m, n) != 1
+      int[] euclides_resultado = algoritmo_Euclides_extendido(m / mcd, n / mcd);
+      int x0 = euclides_resultado[1] * (c - d) / mcd;
+
+      // Verificar si x0 es una solución
+      int lcm = exercici1(m,n);// Calcular el mínimo común múltiple
+      for (int k = 0; k < mcd; k++) {
+        int x = x0 + k * lcm;
+        if ((a * x % m == c % m) && (b * x % n == d % n)) {
+          return true;
+        }
+      }
+
+      return false;
     }
 
     /*
@@ -1033,8 +1067,22 @@ class Entrega {
       // Exercici 3
       // El sistema a·x ≡ c (mod m), b·x ≡ d (mod n) té solució?
 
-/*      assertThat(exercici3(3, 2, 2, 2, 5, 4));
-      assertThat(!exercici3(3, 2, 2, 2, 10, 4));*/
+      assertThat(exercici3(3, 2, 2, 2, 5, 4));
+      assertThat(!exercici3(3, 2, 2, 2, 10, 4));
+
+      /************* PRUEBAS EXTRA EJERCICIO 3 T4 *****************
+       *                                                          *
+       ************************************************************/
+      //Casos de True
+      assertThat(exercici3(2, 3, 4, 5, 6, 7));
+      assertThat(exercici3(2, 3, 4, 6, 6, 7));
+      assertThat(exercici3(5, 7, 8, 3, 9, 11));
+      //Casos de False
+      assertThat(!exercici3(6, 8, 9, 12, 10, 15));
+      assertThat(!exercici3(10, 6, 5, 3, 12, 14));
+      assertThat(!exercici3(8, 12, 10, 15, 18, 21));
+
+      //*********** FIN PRUEBAS EXTRA EJERCICIO 3 T4 **************
 
       // Exercici 4
       // n^k mod p
