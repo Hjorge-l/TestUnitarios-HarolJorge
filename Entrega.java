@@ -1056,8 +1056,9 @@ class Entrega {
       assertThat(exercici4(3,158,11) == 5);
       assertThat(exercici4(2023,2023,5) == 2);
       assertThat(exercici4(-2024,2023,7) == 6);
+      assertThat(exercici4(2024,-2023,7) == 1);
 
-      //*********** FIN PRUEBAS EXTRA EJERCICIO 2 T4 **************
+      //*********** FIN PRUEBAS EXTRA EJERCICIO 4 T4 **************
     }
   }
 
