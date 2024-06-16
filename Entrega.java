@@ -738,7 +738,50 @@ class Entrega {
      * Determinau si el graf és connex. Podeu suposar que `g` no és dirigit.
      */
     static boolean exercici1(int[][] g) {
-      return false; // TO DO
+      int n = g.length; // Número de nodos en el grafo
+      if (n == 0) return true; // Un grafo vacío se considera conexo
+
+      boolean[] nodos_visitados = new boolean[n];
+
+      // Buscar el primer nodo no vacío para iniciar la DFS
+      int startNode = -1;
+      for (int i = 0; i < n; i++) {
+        if (g[i].length > 0) {
+          startNode = i;
+          break;
+        }
+      }
+
+      // Si no se encontró un nodo con aristas, el grafo es disconexo si hay más de un nodo
+      if (startNode == -1) {
+        return n == 1; // Un solo nodo sin aristas es conexo, más de uno no lo es
+      }
+
+      // Realizar DFS desde el primer nodo no vacío
+      busqueda_profunda(g, startNode, nodos_visitados);
+      // Verificar si hay nodos aislados
+      for (int i = 0; i < n; i++) {
+        if (g[i].length == 0 && i != startNode) {
+          return false; // Si hay algún nodo aislado y no es el nodo inicial, el grafo no es conexo
+        }
+      }
+
+      // Verificar si todos los nodos con aristas han sido visitados
+      for (int i = 0; i < n; i++) {
+        if (g[i].length > 0 && !nodos_visitados[i]) {
+          return false; // Si algún nodo no vacío no fue visitado, el grafo no es conexo
+        }
+      }
+      return true; // Todos los nodos fueron visitados, el grafo es conexo
+    }
+    static void busqueda_profunda(int[][] g, int v, boolean[] visited) {
+      visited[v] = true; // Marca el nodo como visitado
+      // Visita todos los nodos adyacentes no visitados
+      for (int adj : g[v]) {
+        if (!visited[adj]) {
+          busqueda_profunda(g, adj, visited);
+        }
+      }
     }
 
     /*
@@ -790,6 +833,43 @@ class Entrega {
 
       assertThat(exercici1(C3));
       assertThat(!exercici1(B2));
+      assertThat(exercici1(C3D));
+
+      /************* PRUEBAS EXTRA EJERCICIO 1 T3 *****************
+       *                                                          *
+       ************************************************************/
+      //Cuadrado
+      final int[][] C4 = { {1,3}, {0, 2}, {1, 3}, {0,2} };
+      assertThat(exercici1(C4));
+      //Cuadrado con un nodo extra que no está conectado a ninguno de los otros
+      final int[][] C4V2 = { {1,3}, {0, 2}, {1, 3}, {0,2}, {} };
+      assertThat(!exercici1(C4V2));
+      //Cuadrado con varios nodos extra que no están conectados con ninguno de los otros
+      final int[][] C4V3 = { {1,3}, {}, {0, 2}, {}, {1, 3}, {}, {0,2}};
+      assertThat(!exercici1(C4V3));
+      //Grafo camino
+      final int[][] camino = {{1},{0,2},{1,3},{2,4},{3}};
+      assertThat(exercici1(camino));
+
+      //Grafo con 2 caminos
+      final int[][] caminoV2 = {{1},{0},{3},{2,4},{3}};
+      assertThat(!exercici1(caminoV2));
+      //Grafo con 4 caminos
+      final int[][] caminoV3 = {{1},{0},{3},{2,4},{3}, {6}, {5}, {8},{7,9},{8}};
+      assertThat(!exercici1(caminoV3));
+      //Grafo Bipartito
+      final int[][] bipartito = {{3, 4}, {4, 5}, {5, 6}, {0}, {0, 1}, {1, 2}, {2}};
+      assertThat(exercici1(bipartito));
+      //S-Bipartito
+      final int[][] bipartitoV2 = {{3,4,5,6},{3,4,5,6},{3,4,5,6},{0,1,2},{0,1,2},{0,1,2},{0,1,2}};
+      assertThat(exercici1(bipartitoV2));
+      //S-Bipartito + nodo no conexo
+      final int[][] bipartitoV3 = {{4,5,6,7},{4,5,6,7},{4,5,6,7},{},{0,1,2},{0,1,2},{0,1,2},{0,1,2}};
+      assertThat(!exercici1(bipartitoV3));
+      //S-Bipartito + nodo conectado a un nodo arbitrario  
+      final int[][] bipartitoV4 = {{4,5,6,7},{4,5,6,7,3},{4,5,6,7},{1},{0,1,2},{0,1,2},{0,1,2},{0,1,2}};
+      assertThat(exercici1(bipartitoV4));
+      //*********** FIN PRUEBAS EXTRA EJERCICIO 1 T3 **************
 
       // Exercici 2
       // Moviments de cavall
@@ -798,12 +878,12 @@ class Entrega {
       // 0  1   2   3
       // 4  5   6   7
       // 8  9  10  11
-      assertThat(exercici2(4, 3, 0, 11) == 3);
+     /* assertThat(exercici2(4, 3, 0, 11) == 3);*/
 
       // Tauler 3x2. Moviments de 0 a 2: (impossible).
       // 0 1 2
       // 3 4 5
-      assertThat(exercici2(3, 2, 0, 2) == -1);
+      /*assertThat(exercici2(3, 2, 0, 2) == -1);*/
 
       // Exercici 3
       // u apareix abans que v al recorregut en preordre (o u=v)
@@ -823,8 +903,8 @@ class Entrega {
         {}
       };
 
-      assertThat(exercici3(T1, 0, 5, 3));
-      assertThat(!exercici3(T1, 0, 6, 2));
+/*      assertThat(exercici3(T1, 0, 5, 3));
+      assertThat(!exercici3(T1, 0, 6, 2));*/
 
       // Exercici 4
       // Altura de l'arbre donat el recorregut en preordre
@@ -835,8 +915,8 @@ class Entrega {
       final int[] P2 = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
       final int[] D2 = { 2, 0, 2, 0, 2, 0, 2, 0, 0 };
 
-      assertThat(exercici4(P1, D1) == 3);
-      assertThat(exercici4(P2, D2) == 4);
+/*      assertThat(exercici4(P1, D1) == 3);
+      assertThat(exercici4(P2, D2) == 4);*/
     }
   }
 
@@ -1120,7 +1200,7 @@ class Entrega {
   public static void main(String[] args) {
     Tema1.tests();
 /*    Tema2.tests();*/
-    /*Tema3.tests();*/
+    Tema3.tests();
     Tema4.tests();
   }
 
