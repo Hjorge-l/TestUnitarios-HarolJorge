@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 /*
  * Aquesta entrega consisteix en implementar tots els mètodes annotats amb "// TODO". L'enunciat de
@@ -513,7 +512,40 @@ class Entrega {
      * lexicogràficament).
      */
     static int[][] exercici4(int[] a, int[][] rel1, int[][] rel2) {
-      return new int[][] {}; // TODO
+      if (comprobar_funcion(a, rel1) && comprobar_funcion(a, rel2)) {
+        return componer(rel1, rel2);
+      }
+      return null;
+    }
+
+    static boolean comprobar_funcion(int[] a, int[][] relacion) {
+      HashSet<Integer> conjunto = new HashSet<>();
+      for (int[] par : relacion) {
+        if (conjunto.contains(par[0])) {
+          return false;
+        }
+        conjunto.add(par[0]);
+      }
+      for (int x : a) {
+        if (!conjunto.contains(x)) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    static int[][] componer(int[][] rel1, int[][] rel2) {
+      //Array list para almacenar las relaciones
+      List<int[]> lista = new ArrayList<>();
+      for (int[] elem1 : rel1) {
+        for (int[] elem2 : rel2) {
+          if (elem1[1] == elem2[0]) {
+            lista.add(new int[]{elem1[0], elem2[1]});
+          }
+        }
+      }
+      // Convertir la lista a un array bidimensional
+      return lista.toArray(new int[0][]);
     }
 
     /*
@@ -648,7 +680,7 @@ class Entrega {
       // Exercici 4
       // Composició de grafs de funcions (null si no ho son)
 
-/*      assertThat(
+      assertThat(
           exercici4(
             int05,
             generateRel(int05, (x, y) -> x*x == y),
@@ -669,7 +701,7 @@ class Entrega {
             lexSorted(ex4test2),
             generateRel(int05, (x, y) -> y == (5 - x + 1) % 6)
           )
-      );*/
+      );
 
       /************* PRUEBAS EXTRA EJERCICIO 4 T2 *****************
        *                                                          *
