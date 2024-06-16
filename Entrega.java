@@ -858,7 +858,23 @@ class Entrega {
      * abans (o igual) que el vèrtex `v` al recorregut en preordre de l'arbre.
      */
     static boolean exercici3(int[][] g, int r, int u, int v) {
-      return false; // TO DO
+      List<Integer> preordre = new ArrayList<>();
+      preordreRec(g, r, preordre);
+
+      // Trobar les posicions de u i v en el recorregut en preordre
+      int posU = preordre.indexOf(u);
+      int posV = preordre.indexOf(v);
+
+      // Retorna true si u apareix abans o en la mateixa posició que v
+      return posU <= posV;
+    }
+
+    // Funció auxiliar per realitzar el recorregut en preordre
+    static void preordreRec(int[][] g, int r, List<Integer> preordre) {
+      preordre.add(r);
+      for (int fill : g[r]) {
+        preordreRec(g, fill, preordre);
+      }
     }
 
     /*
@@ -869,7 +885,33 @@ class Entrega {
      * L'altura d'un arbre arrelat és la major distància de l'arrel a les fulles.
      */
     static int exercici4(int[] preord, int[] d) {
-      return -1; // TO DO
+      int altura = calcularAltura(preord, d, 0, preord.length, 0);
+      return altura;
+    }
+
+    private static int calcularAltura(int[] preord, int[] grados, int inici, int fi, int nivell) {
+      if (inici >= fi) {
+        return nivell - 1;
+      }
+
+      int v = preord[inici];
+      int fills = grados[v];
+      int alturaMax = nivell;
+
+      int index = inici + 1;
+      for (int i = 0; i < fills; i++) {
+        int novaAltura = calcularAltura(preord, grados, index, fi, nivell + 1);
+        alturaMax = Math.max(alturaMax, novaAltura);
+
+        // Avança l'índex tants passos com l'arbre fill s'estén
+        int next = index + 1;
+        for (int j = 0; j < grados[preord[index]]; j++) {
+          next += grados[preord[next]] + 1;
+        }
+        index = next;
+      }
+
+      return alturaMax;
     }
 
     /*
@@ -983,8 +1025,8 @@ class Entrega {
         {}
       };
 
-/*      assertThat(exercici3(T1, 0, 5, 3));
-      assertThat(!exercici3(T1, 0, 6, 2));*/
+      assertThat(exercici3(T1, 0, 5, 3));
+      assertThat(!exercici3(T1, 0, 6, 2));
 
       // Exercici 4
       // Altura de l'arbre donat el recorregut en preordre
@@ -995,8 +1037,15 @@ class Entrega {
       final int[] P2 = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
       final int[] D2 = { 2, 0, 2, 0, 2, 0, 2, 0, 0 };
 
-/*      assertThat(exercici4(P1, D1) == 3);
-      assertThat(exercici4(P2, D2) == 4);*/
+      assertThat(exercici4(P1, D1) == 3);
+      assertThat(exercici4(P2, D2) == 4);
+
+      /************* PRUEBAS EXTRA EJERCICIO 4 T3 *****************
+       *                                                          *
+       ************************************************************/
+      assertThat(exercici4(new int[]{0}, new int[] {0}) == 0);
+      //*********** FIN PRUEBAS EXTRA EJERCICIO 4 T3 **************
+
     }
   }
 
