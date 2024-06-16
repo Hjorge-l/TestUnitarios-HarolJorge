@@ -521,7 +521,28 @@ class Entrega {
      * el seu graf (el de l'inversa). Sino, retornau null.
      */
     static int[][] exercici5(int[] dom, int[] codom, Function<Integer, Integer> f) {
-      return new int[][] {}; // TODO
+      HashSet<Integer> valores = new HashSet<>();
+      List<int[]> graf = new ArrayList<>();
+
+      // Verificar si la función es inyectiva
+      for (int x : dom) {
+        int fx = f.apply(x);
+        if (!valores.add(fx)) {
+          return null; // null si no es inyectiva
+        }
+        graf.add(new int[]{fx, x});
+      }
+
+      // Verificar si la función es sobreyectiva
+      for (int y : codom) {
+        if (!valores.contains(y)) {
+          return null; // null si no es sobreyectiva
+        }
+      }
+
+      // Convertir la lista a matriz y retornar el gráfico ordenado
+      int[][] resultado = lexSorted(graf.toArray(new int[0][]));
+      return resultado;
     }
 
     /*
@@ -596,9 +617,9 @@ class Entrega {
       // Exercici 2
       // nombre d'elements de la clausura d'equivalència
 
-/*      final int[] int08 = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
+      final int[] int08 = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
 
-      assertThat(exercici2(int08, generateRel(int08, (x, y) -> y == x + 1)) == 81);
+      /*assertThat(exercici2(int08, generateRel(int08, (x, y) -> y == x + 1)) == 81);
 
       final int[] int123 = { 1, 2, 3 };
 
@@ -613,9 +634,9 @@ class Entrega {
       // Exercici 3
       // Si rel és un ordre total, retornar les arestes del diagrama de Hasse
 
-/*      final int[] int05 = { 0, 1, 2, 3, 4, 5 };
+     final int[] int05 = { 0, 1, 2, 3, 4, 5 };
 
-      assertThat(exercici3(int05, generateRel(int05, (x, y) -> x >= y)) == 5);
+     /* assertThat(exercici3(int05, generateRel(int05, (x, y) -> x >= y)) == 5);
       assertThat(exercici3(int08, generateRel(int05, (x, y) -> x <= y)) == -2);*/
 
       /************* PRUEBAS EXTRA EJERCICIO 3 T2 *****************
@@ -659,14 +680,14 @@ class Entrega {
       // Exercici 5
       // trobar l'inversa (null si no existeix)
 
-/*      assertThat(exercici5(int05, int08, x -> x + 3) == null);
+      assertThat(exercici5(int05, int08, x -> x + 3) == null);
 
       assertThat(
           Arrays.deepEquals(
             lexSorted(exercici5(int08, int08, x -> 8 - x)),
             generateRel(int08, (x, y) -> y == 8 - x)
           )
-      );*/
+      );
     }
 
     /**
