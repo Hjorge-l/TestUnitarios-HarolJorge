@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 /*
  * Aquesta entrega consisteix en implementar tots els mètodes annotats amb "// TODO". L'enunciat de
@@ -39,9 +40,9 @@ import java.util.function.Predicate;
  *
  * Podeu fer aquesta entrega en grups de com a màxim 3 persones, i necessitareu com a minim Java 10.
  * Per entregar, posau a continuació els vostres noms i entregau únicament aquest fitxer.
- * - Nom 1:
- * - Nom 2:
- * - Nom 3:
+ * - Nom 1:Harol Jorge López G2
+ * - Nom 2:David Gonzalez Lastra
+ * - Nom 3:Elena del Pilar Fernadez Wyzynska
  *
  * L'entrega es farà a través d'una tasca a l'Aula Digital que obrirem abans de la data que se us
  * hagui comunicat i vos recomanam que treballeu amb un fork d'aquest repositori per seguir més
@@ -500,7 +501,80 @@ class Entrega {
      * Podeu soposar que `a` i `rel` estan ordenats de menor a major (`rel` lexicogràficament).
      */
     static int exercici3(int[] a, int[][] rel) {
-      return -1; // TODO
+      if (!esOrdenTotal(a, rel)) {
+        return -2;
+      }
+
+      // Calcular el número de aristas en el diagrama de Hasse
+      return contarAristasHasse(a, rel);
+    }
+
+    // Comprueba si la relación es un orden total
+    private static boolean esOrdenTotal(int[] a, int[][] rel) {
+      int n = a.length;
+      // Reflexiva: cada elemento se relaciona consigo mismo
+      for (int i = 0; i < n; i++) {
+        if (!relacionado(a[i], a[i], rel)) {
+          return false;
+        }
+      }
+      // Antisimétrica y Total
+      for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+          if (i != j) {
+            if (!relacionado(a[i], a[j], rel) && !relacionado(a[j], a[i], rel)) {
+              return false;
+            }
+            if (relacionado(a[i], a[j], rel) && relacionado(a[j], a[i], rel) && a[i] != a[j]) {
+              return false;
+            }
+          }
+        }
+      }
+      // Transitiva
+      for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+          for (int k = 0; k < n; k++) {
+            if (relacionado(a[i], a[j], rel) && relacionado(a[j], a[k], rel) && !relacionado(a[i], a[k], rel)) {
+              return false;
+            }
+          }
+        }
+      }
+      return true;
+    }
+
+    // Comprueba si x está relacionado con y en rel
+    private static boolean relacionado(int x, int y, int[][] rel) {
+      for (int[] par : rel) {
+        if (par[0] == x && par[1] == y) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    // Contar las aristas del diagrama de Hasse
+    private static int contarAristasHasse(int[] a, int[][] rel) {
+      int n = a.length;
+      int aristas = 0;
+      for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+          if (i != j && relacionado(a[i], a[j], rel)) {
+            boolean esAristaHasse = true;
+            for (int k = 0; k < n; k++) {
+              if (k != i && k != j && relacionado(a[i], a[k], rel) && relacionado(a[k], a[j], rel)) {
+                esAristaHasse = false;
+                break;
+              }
+            }
+            if (esAristaHasse) {
+              aristas++;
+            }
+          }
+        }
+      }
+      return aristas;
     }
 
 
@@ -651,7 +725,7 @@ class Entrega {
 
       final int[] int08 = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
 
-      /*assertThat(exercici2(int08, generateRel(int08, (x, y) -> y == x + 1)) == 81);
+/*      assertThat(exercici2(int08, generateRel(int08, (x, y) -> y == x + 1)) == 81);
 
       final int[] int123 = { 1, 2, 3 };
 
@@ -668,8 +742,8 @@ class Entrega {
 
      final int[] int05 = { 0, 1, 2, 3, 4, 5 };
 
-     /* assertThat(exercici3(int05, generateRel(int05, (x, y) -> x >= y)) == 5);
-      assertThat(exercici3(int08, generateRel(int05, (x, y) -> x <= y)) == -2);*/
+      assertThat(exercici3(int05, generateRel(int05, (x, y) -> x >= y)) == 5);
+      assertThat(exercici3(int08, generateRel(int05, (x, y) -> x <= y)) == -2);
 
       /************* PRUEBAS EXTRA EJERCICIO 3 T2 *****************
        *                                                          *
