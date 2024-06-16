@@ -1037,6 +1037,7 @@ class Entrega {
       assertThat(exercici3(T1, 0, 0, 0));
 
       assertThat(exercici3(T1, 0, 10, 11));
+      assertThat(exercici3(T1, 0, 9, 11));
       //*********** FIN PRUEBAS EXTRA EJERCICIO 3 T3 **************
 
       // Exercici 4
