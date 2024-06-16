@@ -1027,6 +1027,17 @@ class Entrega {
 
       assertThat(exercici3(T1, 0, 5, 3));
       assertThat(!exercici3(T1, 0, 6, 2));
+      /************* PRUEBAS EXTRA EJERCICIO 3 T3 *****************
+       *                                                          *
+       ************************************************************/
+      assertThat(!exercici3(T1, 0, 3, 1));
+      assertThat(!exercici3(T1, 0, 8, 7));
+
+      //Son iguales
+      assertThat(exercici3(T1, 0, 0, 0));
+
+      assertThat(exercici3(T1, 0, 10, 11));
+      //*********** FIN PRUEBAS EXTRA EJERCICIO 3 T3 **************
 
       // Exercici 4
       // Altura de l'arbre donat el recorregut en preordre
@@ -1328,7 +1339,7 @@ class Entrega {
    */
   public static void main(String[] args) {
     Tema1.tests();
-/*    Tema2.tests();*/
+    Tema2.tests();
     Tema3.tests();
     Tema4.tests();
   }
