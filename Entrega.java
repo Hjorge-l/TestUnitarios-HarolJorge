@@ -953,7 +953,39 @@ class Entrega {
      * qüestió de segons independentment de l'entrada.
      */
     static int exercici4(int n, int k, int p) {
-      return -1; // TO DO
+      if (p == 1) return 0; // Cualquier número mod 1 es 0
+
+      // Paso 1: Reducir la base y manejar negativos
+      n = Math.floorMod(n, p);
+
+      // Paso 2: Calcular phi(p) como p es primo usamos las formula del pequeño Fermat
+      int phiP = p - 1;
+
+      // Paso 3: Reducir el exponente usando phi(p)
+      k = k % phiP;
+
+      // Paso 4: Calcular la potencia usando Exponentiation by Squaring
+      int result = modPow(n, k, p);
+
+      // Asegurarse de que el resultado está en el rango correcto
+      return result;
+    }
+
+    static int modPow(int base, int exp, int mod) {
+      long resultado = 1;
+      long baseMod = base % mod;
+      if (baseMod < 0) {
+        baseMod += mod; // Asegurarse de que baseMod sea positivo
+      }
+
+      while (exp > 0) {
+        if (exp % 2 == 1) { // Si exp es impar
+          resultado = (resultado * baseMod) % mod;
+        }
+        exp = exp / 2; // exp = exp / 2
+        baseMod = (baseMod * baseMod) % mod;
+      }
+      return (int) resultado;
     }
 
     /*
@@ -1007,8 +1039,15 @@ class Entrega {
       // Exercici 4
       // n^k mod p
 
-/*      assertThat(exercici4(2018, 2018, 5) == 4);
-      assertThat(exercici4(-2147483646, 2147483645, 46337) == 7435);*/
+      assertThat(exercici4(2018, 2018, 5) == 4);
+      assertThat(exercici4(-2147483646, 2147483645, 46337) == 7435);
+
+      /************* PRUEBAS EXTRA EJERCICIO 4 T4 *****************
+       *                                                          *
+       ************************************************************/
+      assertThat(exercici4(274, 2780, 11) == 1);
+      assertThat(exercici4(3752, 9784, 11) == 1);
+      //*********** FIN PRUEBAS EXTRA EJERCICIO 2 T4 **************
     }
   }
 
